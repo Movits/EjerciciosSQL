@@ -75,3 +75,35 @@ UPDATE peliculas
 SET plataformas_de_streaming = 'no tiene', tiene_plataforma_de_streaming = 0
 WHERE id = 4;
 
+ALTER TABLE peliculas ADD valio_la_pena BOOLEAN;
+
+DELIMITER //
+CREATE TRIGGER establecer_valio_la_pena
+BEFORE INSERT ON peliculas
+FOR EACH ROW
+BEGIN
+   IF NEW.recaudacion_en_millones > 80.50 THEN
+       SET NEW.valio_la_pena = 1;
+   ELSE
+       SET NEW.valio_la_pena = 0;
+   END IF;
+END;
+//
+DELIMITER ;
+
+INSERT INTO peliculas (nombre, ano_de_estreno, recaudacion_en_millones, director, plataformas_de_streaming)
+VALUES
+    ('Moonlight', 2016, 65, 'Barry Jenkins', 'no tiene'),
+    ('Paranormal Activity', 2007, 193, 'Oren Peli', 'Netflix');
+
+/* Actualizar los valores NULL */
+UPDATE peliculas
+SET valio_la_pena = CASE
+    WHEN recaudacion_en_millones > 80.50 THEN 1
+    ELSE 0
+END;
+
+/* Actualizar para tener solo un/a director */
+UPDATE peliculas
+SET director = 'Lana Wachowski'
+WHERE id = 7;
