@@ -37,3 +37,13 @@ VALUES
 SHOW TABLES;
 DESCRIBE peliculas;
 SELECT * FROM peliculas;
+
+/* Agregar una nueva columna a la tabla de películas*/
+ALTER TABLE peliculas ADD tiene_plataforma_de_streaming BOOLEAN;
+/* Actualizar los registros existentes*/
+UPDATE peliculas SET tiene_plataforma_de_streaming = 1 WHERE plataformas_de_streaming IS NOT NULL;
+
+INSERT INTO peliculas (nombre, ano_de_estreno, recaudacion_en_millones, director, plataformas_de_streaming, tiene_plataforma_de_streaming)
+VALUES
+    ('Interstellar', 2014, 677.47, 'Christopher Nolan', NULL, 0),
+    ('Spider-Man: No Way Home', 2021, 1852.56, 'Jon Watts', 'Disney+', 1);
