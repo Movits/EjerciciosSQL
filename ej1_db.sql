@@ -47,3 +47,31 @@ INSERT INTO peliculas (nombre, ano_de_estreno, recaudacion_en_millones, director
 VALUES
     ('Interstellar', 2014, 677.47, 'Christopher Nolan', NULL, 0),
     ('Spider-Man: No Way Home', 2021, 1852.56, 'Jon Watts', 'Disney+', 1);
+
+ALTER TABLE peliculas
+MODIFY plataformas_de_streaming VARCHAR(255) DEFAULT 'no tiene';
+
+/* Crear un trigger para actualizar automáticamente la columna tiene_plataforma_de_streaming*/
+DELIMITER //
+CREATE TRIGGER actualizar_estado_streaming
+BEFORE INSERT ON peliculas
+FOR EACH ROW
+BEGIN
+   IF NEW.plataformas_de_streaming = 'no tiene' THEN
+       SET NEW.tiene_plataforma_de_streaming = 0;
+   ELSE
+       SET NEW.tiene_plataforma_de_streaming = 1;
+   END IF;
+END;
+//
+DELIMITER ;
+
+INSERT INTO peliculas (nombre, ano_de_estreno, recaudacion_en_millones, director, plataformas_de_streaming)
+VALUES
+    ('Inception', 2010, 829.89, 'Christopher Nolan', 'no tiene'),
+    ('The Matrix', 1999, 465.3, 'Lana Wachowski, Lilly Wachowski', 'HBO');
+
+UPDATE peliculas
+SET plataformas_de_streaming = 'no tiene', tiene_plataforma_de_streaming = 0
+WHERE id = 4;
+
